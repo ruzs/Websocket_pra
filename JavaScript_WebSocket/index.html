@@ -1,77 +1,109 @@
 <textarea cols="50" rows="10" id="txtShow" disabled></textarea>
 <input id="txtInput" type="text">
 <input type="submit" id="btnSend" value="送出">
+<br>
+<div id="idn">ID=</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", event => { 
-  let keyinDom = document.querySelector('#txtInput')
-  let showDom = document.querySelector('#txtShow')
-  var user= 'User'+Math.floor(Math.random()*10000);
+	// document.addEventListener("DOMContentLoaded", event => { 
+	let keyinDom = document.querySelector('#txtInput');
+	let showDom = document.querySelector('#txtShow');
+	var user = 'User' + Math.floor(Math.random() * 10000);
 
-  document.querySelector("#btnSend").addEventListener('click',() => {
+	document.querySelector("#btnSend").addEventListener('click', () => {
+		let txt = keyinDom.value;
+		if (txt.length === 0 || txt.trim() == "") {
+		} else {
+			// ws.send(txt.trim());
+			keyinDom.focus();
+			// data={txt:txt.trim(),user:user};
+			data = [txt.trim(), '000913' + user];
+			ws.send(data);
+		}
+		if (txt=='close') {
+			ws.close();
+			keyinDom.value = "";
+		}
+		if (txt=='link') {
+			
+		// 	open();
+		// 	close();
+		// 	message();
+		link();
+		}
+		console.log(user);
+	});
 
-    let txt = keyinDom.value;
-    if (txt.length === 0 || txt.trim()=="") {
-      }else{
-        // ws.send(txt.trim());
-        keyinDom.focus();
-        // data={txt:txt.trim(),user:user};
-        data=[txt.trim(),'000913'+user];
-        ws.send(data);
-      }
-    console.log(user);
-  });
-  
-  keyinDom.addEventListener("keypress", function(event) {
-    let txt = keyinDom.value;
-    if (event.key === "Enter") {
-      if (txt.length === 0 || txt.trim()=="") {
-      }else{
-        event.preventDefault();
-        document.querySelector("#btnSend").click();
-      }
-    }
-  });
+	keyinDom.addEventListener("keypress", function (event) {
+		let txt = keyinDom.value;
+		if (event.key === "Enter") {
+			if (txt.length === 0 || txt.trim() == "") {
+			} else {
+				event.preventDefault();
+				document.querySelector("#btnSend").click();
+			}
+		}
+	});
 
-  // 建立 WebSocket (本例 server 端於本地運行)
-  let url = 'ws://localhost:3000';
-  var ws = new WebSocket(url);
-  // 監聽連線狀態
-  ws.onopen = (event) => {
-    console.log('open connection');
-    hr=new Date().getHours()<10?'0'+new Date().getHours():new Date().getHours();
-    min=new Date().getMinutes()<10?'0'+new Date().getMinutes():new Date().getMinutes();
-    sec=new Date().getSeconds()<10?'0'+new Date().getSeconds():new Date().getSeconds();
-    showDom.value = hr+":"+min+":"+sec+"|"+`${user}進入聊天室`;
-    console.log('open_event',event);
-    // ws.send('4555');
-    console.log('ws',ws);
-    console.log('user',user);
-  }
+	// 建立 WebSocket (本例 server 端於本地運行)
+	// set()
+		let url = 'ws://localhost:3000';
+		var ws = new WebSocket(url);
+	// 監聽連線狀態
+	link()
+	function link() {
+		// console.log(
+		// 	document.getElementById('#idn').innerHTML ='20';
 
-  ws.onclose = () => {
-    hr=new Date().getHours()<10?'0'+new Date().getHours():new Date().getHours();
-    min=new Date().getMinutes()<10?'0'+new Date().getMinutes():new Date().getMinutes();
-    sec=new Date().getSeconds()<10?'0'+new Date().getSeconds():new Date().getSeconds();
-    showDom.value = hr+":"+min+":"+sec+"|"+`${user}聊天室`;
-    console.log('close connection');
-    
-  }
+		// );
+		open()
+		close();
+		message();
+	}
+	// open()
+	function open() {
+		ws.onopen = (event) => {
+		console.log('open connection');
+		hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
+		min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+		sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+		showDom.value = hr + ":" + min + ":" + sec + "|" + `${user}進入聊天室`;
+		console.log('open_event', event);
+		console.log('ws', ws);
+		console.log('user', user);
+		ws.send('a1a2a3a'+user);
+		}
+	}
+	// close();
+	function close() {
+		ws.onclose = () => {
+			hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
+			min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+			sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+			showDom.value = hr + ":" + min + ":" + sec + "|" + `${user}已離開聊天室`;
+			console.log('close connection');
+			// ws.send('z1z2z3z'+user);
+		}
+	}
 
-  //接收 Server 發送的訊息
-  ws.onmessage = event => {
-    hr=new Date().getHours()<10?'0'+new Date().getHours():new Date().getHours();
-    min=new Date().getMinutes()<10?'0'+new Date().getMinutes():new Date().getMinutes();
-    sec=new Date().getSeconds()<10?'0'+new Date().getSeconds():new Date().getSeconds();
-    console.log('message_event',event);
-    let txt = event.data;
-    if (!showDom.value) {
-      showDom.value = hr+":"+min+":"+sec+"|"+txt;
-    }else{
-      showDom.value = showDom.value + "\n" + hr+":"+min+":"+sec+"|"+txt;
-    }
-    keyinDom.value = "";
-    showDom.scrollTop=showDom.scrollHeight;
-  }
-});
+	//接收 Server 發送的訊息
+	// message();
+	function message() {
+		ws.onmessage = event => {
+			hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
+			min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+			sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+			console.log('message_event', event);
+			let txt = event.data;
+			// if (!showDom.value) {
+			// 	showDom.value = txt;
+			// } else {
+			// 	showDom.value = showDom.value + "\n" + txt;
+			// }
+			showDom.value = txt;
+			keyinDom.value = "";
+			showDom.scrollTop = showDom.scrollHeight;
+		}
+	}
+// });
 </script>
