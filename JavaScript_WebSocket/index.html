@@ -8,7 +8,9 @@
 	// document.addEventListener("DOMContentLoaded", event => { 
 	let keyinDom = document.querySelector('#txtInput');
 	let showDom = document.querySelector('#txtShow');
-	var user = 'User' + Math.floor(Math.random() * 10000);
+	var id=Math.floor(Math.random() * 10000)
+	var user = 'User' + id;
+	document.querySelector('#idn').innerHTML='ID='+id;
 
 	document.querySelector("#btnSend").addEventListener('click', () => {
 		let txt = keyinDom.value;
@@ -107,3 +109,4 @@
 	}
 // });
 </script>
+<!-- node server.js -->

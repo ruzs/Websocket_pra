@@ -29,19 +29,19 @@ wss.on('connection', ws => {
 		if (data.includes(open_token)) {
 			// console.log('data',data);
 			data = data.split(open_token);
-			chat.push(`${time} ${data[1]}進入聊天室`);
+			chat.push(`${time}${data[1]} 進入聊天室`);
 			
 		}
 		if (data.includes(token)) {
 			data = data.split(token);
 			console.log('data2', data); // 可在 terminal 看收到的訊息
-			data = `${time} ${data[1]}:${data[0]}`;
+			data = `${time}${data[1]}: ${data[0]}`;
 			chat.push(data);
 		}
 
 		if (data.includes(close_token)) {
 			data = data.split(close_token);
-			chat.push(`${time} ${data[1]}離開聊天室`);
+			chat.push(`${time}${data[1]} 離開聊天室`);
 		}
 
 		/// 發送消息給client 
