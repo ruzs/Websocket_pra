@@ -18,67 +18,21 @@
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
+                /* height: 100vh; */
+                /* margin: 0; */
             }
         </style>
     </head>
     <body>
-        <div class="block m-4">
-            <textarea cols="50" rows="10" id="txtShow" disabled></textarea>
-            <input id="txtInput" type="text">
-            <input type="submit" id="btnSend" value="送出">
-            <br>
-            <div id="idn">ID=</div>
-        </div>
-
-        <div class="flex-center position-ref full-height">
-            <div class="top-right links">
-                <a href="">Home</a>
-                <a href="">Login</a>
-                <a href="">Register</a>
+        <div class="mt-5">
+            <div class="d-inline-block ml-5">
+                <textarea class="d-inline-block" cols="50" rows="10" id="txtShow" disabled></textarea>
+                <br>
+                <div class="d-inline-block">
+                    <div id="idn" class="d-inline-block">ID=</div>
+                    <input type="text" id="txtInput" class="d-inline-block">
+                    <input type="submit" id="btnSend" class="d-inline-block" value="送出">
+                </div>
             </div>
         </div>
 
@@ -87,41 +41,49 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-        <script src="../js/app.js"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
         <script>
-            // let url = 'ws://websocket.com.tw:6001';
-            // var ws = new WebSocket(url);
+            let orderId = 20;
+            let keyinDom = $('#txtInput');
+            let showDom = $('#txtShow');
 
-            // ws.onopen = (event) => {
-            //     console.log('open connection');
-            //     hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
-            //     min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
-            //     sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
-            //     showDom.value = hr + ":" + min + ":" + sec + "|" + `${user}進入聊天室`;
-            //     console.log('open_event', event);
-            //     console.log('ws', ws);
-            //     console.log('user', user);
-            //     ws.send('a1a2a3a'+user);
-            // }
+
+            $(document).on('click','#btnSend',function () {
+                let txt = keyinDom.val();
+                console.log('click',txt);
+                Echo.private(`order${orderId}`)
+                    .listen('ShippingStatusUpdated', (e) => {
+                        console.log(e.update);
+                    })
+                    ;
+                orderId+=1;
+                console.log('Echo',Echo);
+                keyinDom.val('');
+            })
+
+
+            $(document).on('keypress','#txtInput',function () {
+                let txt = keyinDom.val();
+                if (event.key === "Enter") {
+                // if (event.which === 13) {
+                    if (txt.length === 0 || txt.trim() == "") {
+                    } else {
+                        event.preventDefault();
+                        // console.log('txt',txt);
+                        $("#btnSend").click();
+                    }
+                }
+            })
+
+            console.log("                  _oo0oo_\n                 o8888888o\n                 88\" . \"88\n                 (| -_- |)\n                 0\\  \x3d  /0\n               ___/`---'\\___\n             .' \\\\|     |// '.\n            / \\\\|||  :  |||// \\\n           / _||||| -:- |||||- \\\n          |   | \\\\\\  -  /// |   |\n          | \\_|  ''\\---/''  |_/ |\n          \\  .-\\__  '-'  ___/-. /\n        ___'. .'  /--.--\\  `. .'___\n     .\"\" '\x3c  `.___\\_\x3c|\x3e_/___.' \x3e' \"\".\n    | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n    \\  \\ `_.   \\_ __\\ /__ _/   .-` /  /\n\x3d\x3d\x3d\x3d\x3d`-.____`.___ \\_____/___.-`___.-'\x3d\x3d\x3d\x3d\x3d\n                  `\x3d---\x3d'\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n          \u4f5b\u7956\u4fdd\u4f51         \u6c38\u7121BUG\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             
-            // import Echo from "../js/bootstrap"
-            // // import Echo from "laravel-echo"
-            // window.Pusher = require('pusher-js');
-            // // console.log('key',process.env.MIX_PUSHER_APP_KEY);
-            // window.Echo = new Echo({
-            //     broadcaster: 'pusher',
-            //     key: process.env.MIX_PUSHER_APP_KEY,
-            //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-            //     forceTLS: false,
-            //     disableStats: true,
-            //     enabledTransports: ['ws', 'wss'],
+            // Echo.leave(`orders.${this.order}`);
+            // const channel = window.Echo.join('orders');
+            // channel.listen('EventName', (data) => {
+            //     console.log('Event received:', data);
             // });
 
-            // console.log('window',WebSocket);
-            // window.Echo.private(`chat`).listen('chat.message', (event) => {
-            //     console.log(event.data);
-            // });
-            
+            // channel.leave();
         </script>
     </body>
 </html>

@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('websocket');
 });
 
+// Route::get('/test', function () {
+//     return event(new \App\Events\MyEvent('hello world'));
+// })->name('test');
+
 // function onMessage(ConnectionInterface $connection, MessageInterface $message)
 // {
 //     $data = json_decode($message->getContent(), true);

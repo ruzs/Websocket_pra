@@ -24,7 +24,8 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    // wsHost: window.location.hostname,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
     // wsPort: window.location.port || (window.location.protocol.replace(/:/g, '') === 'https' ? '443' : '80'),
     forceTLS: false,
     disableStats: true,
@@ -38,4 +39,4 @@ window.Echo = new Echo({
 //     .listen('OrderShipped', (e) => {
 //         console.log(e.order.name);
 //     });
-// Echo.leave('orders');
+// Echo.leave(`orders.${this.order.id}`);

@@ -25697,7 +25697,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "chatchat",
   cluster: "ap1",
-  // wsHost: window.location.hostname,
+  wsHost: window.location.hostname,
+  wsPort: 6001,
   // wsPort: window.location.port || (window.location.protocol.replace(/:/g, '') === 'https' ? '443' : '80'),
   forceTLS: false,
   disableStats: true,
@@ -25711,7 +25712,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 //     .listen('OrderShipped', (e) => {
 //         console.log(e.order.name);
 //     });
-// Echo.leave('orders');
+// Echo.leave(`orders.${this.order.id}`);
 
 /***/ }),
 
