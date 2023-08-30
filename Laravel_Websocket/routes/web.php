@@ -21,6 +21,13 @@ Route::get('/', function () {
     return view('websocket');
 });
 
+Route::get('/message',function ($data) {
+    event(new \App\Events\MyEvent($data));
+    return sprintf('傳送資料為%s',$data);
+});
+\BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter::webSocket('/liam/hao/app/{appKey}', \App\Http\Controllers\MyWebsocketHandler::class);
+
+
 // Route::get('/test', function () {
 //     return event(new \App\Events\MyEvent('hello world'));
 // })->name('test');

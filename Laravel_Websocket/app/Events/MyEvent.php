@@ -13,9 +13,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 
-use Ratchet\ConnectionInterface;
-use Ratchet\RFC6455\Messaging\MessageInterface;
-use Ratchet\WebSocket\MessageComponentInterface;
+// use Ratchet\ConnectionInterface;
+// use Ratchet\RFC6455\Messaging\MessageInterface;
+// use Ratchet\WebSocket\MessageComponentInterface;
 
 
 class MyEvent implements ShouldBroadcast 
@@ -44,7 +44,8 @@ class MyEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         // return new Channel('my-channel');
-        return new PrivateChannel('user.'.$this->user->id);
+        return new PrivateChannel('TestWebsocket');
+        // return new PrivateChannel('user.'.$this->user->id);
         // return new PrivateChannel('channel-name');
         // return['my-channel'];
     }

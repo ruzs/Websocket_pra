@@ -32,6 +32,8 @@
                     <div id="idn" class="d-inline-block">ID=</div>
                     <input type="text" id="txtInput" class="d-inline-block">
                     <input type="submit" id="btnSend" class="d-inline-block" value="送出">
+                    <input type="button" id="btnSend2" class="d-inline-block" value="送出2">
+                    <input type="button" id="btnSend3" class="d-inline-block" value="Channel list">
                 </div>
             </div>
         </div>
@@ -47,20 +49,17 @@
             let keyinDom = $('#txtInput');
             let showDom = $('#txtShow');
 
-
             $(document).on('click','#btnSend',function () {
                 let txt = keyinDom.val();
                 console.log('click',txt);
-                Echo.private(`order${orderId}`)
-                    .listen('ShippingStatusUpdated', (e) => {
+                Echo.private(`order.${orderId}`)
+                    .listen('MyEvent', (e) => {
                         console.log(e.update);
-                    })
-                    ;
+                    });
                 orderId+=1;
                 console.log('Echo',Echo);
                 keyinDom.val('');
             })
-
 
             $(document).on('keypress','#txtInput',function () {
                 let txt = keyinDom.val();
@@ -75,15 +74,38 @@
                 }
             })
 
-            console.log("                  _oo0oo_\n                 o8888888o\n                 88\" . \"88\n                 (| -_- |)\n                 0\\  \x3d  /0\n               ___/`---'\\___\n             .' \\\\|     |// '.\n            / \\\\|||  :  |||// \\\n           / _||||| -:- |||||- \\\n          |   | \\\\\\  -  /// |   |\n          | \\_|  ''\\---/''  |_/ |\n          \\  .-\\__  '-'  ___/-. /\n        ___'. .'  /--.--\\  `. .'___\n     .\"\" '\x3c  `.___\\_\x3c|\x3e_/___.' \x3e' \"\".\n    | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n    \\  \\ `_.   \\_ __\\ /__ _/   .-` /  /\n\x3d\x3d\x3d\x3d\x3d`-.____`.___ \\_____/___.-`___.-'\x3d\x3d\x3d\x3d\x3d\n                  `\x3d---\x3d'\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n          \u4f5b\u7956\u4fdd\u4f51         \u6c38\u7121BUG\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            
-            // Echo.leave(`orders.${this.order}`);
-            // const channel = window.Echo.join('orders');
-            // channel.listen('EventName', (data) => {
-            //     console.log('Event received:', data);
+            // console.log("                  _oo0oo_\n                 o8888888o\n                 88\" . \"88\n                 (| -_- |)\n                 0\\  \x3d  /0\n               ___/`---'\\___\n             .' \\\\|     |// '.\n            / \\\\|||  :  |||// \\\n           / _||||| -:- |||||- \\\n          |   | \\\\\\  -  /// |   |\n          | \\_|  ''\\---/''  |_/ |\n          \\  .-\\__  '-'  ___/-. /\n        ___'. .'  /--.--\\  `. .'___\n     .\"\" '\x3c  `.___\\_\x3c|\x3e_/___.' \x3e' \"\".\n    | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n    \\  \\ `_.   \\_ __\\ /__ _/   .-` /  /\n\x3d\x3d\x3d\x3d\x3d`-.____`.___ \\_____/___.-`___.-'\x3d\x3d\x3d\x3d\x3d\n                  `\x3d---\x3d'\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n          \u4f5b\u7956\u4fdd\u4f51         \u6c38\u7121BUG\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            // Echo.listen('.server.created', function (e) {
+            //     console.log(e.update);
             // });
+            // Echo.leave(`orders.${this.order}`);
+            $(document).on('click','#btnSend2',function () {
+                const channel = Echo.join(`order.${orderId}`);
+                channel.listen('server.created', (data) => {
+                    console.log('Event received:', data);
+                });
+                orderId+=1;
+                console.log('Echo',Echo);
+            })
 
-            // channel.leave();
+            console.log('Echo',Echo);
+
+            $(document).on('click','#btnSend3',function () {
+                console.log('Echo Channel List:',Echo.connector.channels);
+
+                Echo.connector.pusher.send_event('hi_girl', {
+                my_name: 'LiamHao',
+                my_height: 180,
+            });
+
+            })
+            
+            // 離開公共頻道
+            // Echo.leaveChannel('orders');
+
+            // 離開私人頻道
+            // Echo.leave('orders');
+
         </script>
     </body>
 </html>

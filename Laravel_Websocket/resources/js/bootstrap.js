@@ -24,6 +24,7 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    wsPath: '/liam/hao',
     wsHost: window.location.hostname,
     wsPort: 6001,
     // wsPort: window.location.port || (window.location.protocol.replace(/:/g, '') === 'https' ? '443' : '80'),
