@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// use BeyondCode\LaravelWebSockets\Facades\WebSocketRouter;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use BeyondCode\LaravelWebSockets\WebSockets\Channels\Channel;
 use BeyondCode\LaravelWebSockets\WebSockets\Channels\PrivateChannel;
-
+	
 // WebSocketsRouter::webSocket('/app', YourWebSocketHandler::class);
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +22,17 @@ Route::get('/', function () {
     return view('websocket');
 });
 
-Route::get('/message',function ($data) {
-    event(new \App\Events\MyEvent($data));
-    return sprintf('傳送資料為%s',$data);
-});
-\BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter::webSocket('/liam/hao/app/{appKey}', \App\Http\Controllers\MyWebsocketHandler::class);
+// Route::get('/message',function ($data) {
+//     event(new \App\Events\MyEvent($data));
+//     return sprintf('傳送資料為%s',$data);
+// });
+
+WebSocketsRouter::webSocket('/liam/hao/app/{appKey}', \App\Http\Controllers\MyWebsocketHandler::class);
+// WebSocketsRouter::websocket('/liam/hao/app/chatchat', \App\Http\Controllers\MyWebsocketHandler::class);
+
+// WebSocketRouter::get('/liam/hao/app/chatchat', \App\Http\Controllers\MyWebsocketHandler::class);
+// Route::get('/liam/hao/app/chatchat', MyWebsocketHandler::class);
+
 
 
 // Route::get('/test', function () {
@@ -45,3 +52,6 @@ Route::get('/message',function ($data) {
 //         ]);
 //     }
 // }
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

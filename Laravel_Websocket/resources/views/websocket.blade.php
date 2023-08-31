@@ -25,16 +25,20 @@
     </head>
     <body>
         <div class="mt-5">
-            <div class="d-inline-block ml-5">
+            <div class="d-inline-block ml-5 font-weight-bold">
                 <textarea class="d-inline-block" cols="50" rows="10" id="txtShow" disabled></textarea>
                 <br>
                 <div class="d-inline-block">
+                    <input type="button" id="login" class="d-block mb-2" value="登入(填入socketId)">
                     <div id="idn" class="d-inline-block">ID=</div>
-                    <input type="text" id="txtInput" class="d-inline-block">
+                    <input type="text" id="txtInput" class="d-block mb-2">
+                    {{-- Channel:<input type="text" id="txtInputCH" class="d-block mb-2"> --}}
+                    <input type="button" id="enter" class="d-inline-block" value="進入頻道">
+                    <input type="button" id="channellist" class="d-inline-block" value="Channel list">
                     <input type="submit" id="btnSend" class="d-inline-block" value="送出">
-                    <input type="button" id="btnSend2" class="d-inline-block" value="送出2">
-                    <input type="button" id="btnSend3" class="d-inline-block" value="Channel list">
                 </div>
+                {{-- <div id="idst" class="d-block font-weight-bold">{{ var_export(\Cache::get('socekt-status')) }}</div> --}}
+                <div id="idch" class="d-block font-weight-bold">Channel List:</div>
             </div>
         </div>
 
@@ -52,12 +56,17 @@
             $(document).on('click','#btnSend',function () {
                 let txt = keyinDom.val();
                 console.log('click',txt);
-                Echo.private(`order.${orderId}`)
-                    .listen('MyEvent', (e) => {
-                        console.log(e.update);
-                    });
-                orderId+=1;
-                console.log('Echo',Echo);
+                // Echo.private(`order.${orderId}`)
+                //     .listen('MyEvent', (e) => {
+                //         console.log(e.update);
+                //     });
+                // orderId+=1;
+                // console.log('Echo',Echo);
+                Echo.connector.pusher.send_event('pusher:Send_Message', {
+                    Name: 'Eddie',
+                    Number: Math.floor(Math.random() * 1000),
+                    Message: keyinDom.val(),
+                });
                 keyinDom.val('');
             })
 
@@ -68,38 +77,37 @@
                     if (txt.length === 0 || txt.trim() == "") {
                     } else {
                         event.preventDefault();
-                        // console.log('txt',txt);
                         $("#btnSend").click();
                     }
                 }
             })
 
             // console.log("                  _oo0oo_\n                 o8888888o\n                 88\" . \"88\n                 (| -_- |)\n                 0\\  \x3d  /0\n               ___/`---'\\___\n             .' \\\\|     |// '.\n            / \\\\|||  :  |||// \\\n           / _||||| -:- |||||- \\\n          |   | \\\\\\  -  /// |   |\n          | \\_|  ''\\---/''  |_/ |\n          \\  .-\\__  '-'  ___/-. /\n        ___'. .'  /--.--\\  `. .'___\n     .\"\" '\x3c  `.___\\_\x3c|\x3e_/___.' \x3e' \"\".\n    | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n    \\  \\ `_.   \\_ __\\ /__ _/   .-` /  /\n\x3d\x3d\x3d\x3d\x3d`-.____`.___ \\_____/___.-`___.-'\x3d\x3d\x3d\x3d\x3d\n                  `\x3d---\x3d'\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n          \u4f5b\u7956\u4fdd\u4f51         \u6c38\u7121BUG\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            // Echo.listen('.server.created', function (e) {
-            //     console.log(e.update);
-            // });
-            // Echo.leave(`orders.${this.order}`);
-            $(document).on('click','#btnSend2',function () {
-                const channel = Echo.join(`order.${orderId}`);
-                channel.listen('server.created', (data) => {
-                    console.log('Event received:', data);
-                });
-                orderId+=1;
+            $(document).on('click','#enter',function () {
+
+                Echo.private(`order.${orderId}`)
+                    .listen('.pusher:Send_Message', (e) => {
+                        console.log(e);
+                    });
                 console.log('Echo',Echo);
             })
 
             console.log('Echo',Echo);
 
-            $(document).on('click','#btnSend3',function () {
+            $(document).on('click','#channellist',function () {
                 console.log('Echo Channel List:',Echo.connector.channels);
-
-                Echo.connector.pusher.send_event('hi_girl', {
-                my_name: 'LiamHao',
-                my_height: 180,
-            });
+                var Allchannel=[];
+                $.each(Echo.connector.channels,function (index,data) {
+                    Allchannel.push(data.name);
+                });
+                console.log('Allchannel',Allchannel);
+            $('#idch').html('Channel List:'+'<br>'+Allchannel);
 
             })
-            
+            $(document).on('click','#login',function () {
+                $('#idn').html('ID='+Echo.socketId());
+            })
+
             // 離開公共頻道
             // Echo.leaveChannel('orders');
 
