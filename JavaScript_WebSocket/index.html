@@ -27,6 +27,13 @@
 	var user = 'User' + id;
 	document.querySelector('#idn').innerHTML='ID='+id;
 
+	function timeSet() {
+		hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
+		min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+		sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+		time= hr + ":" + min + ":" + sec + " |";
+	}
+
 	document.querySelector("#btnSend").addEventListener('click', () => {
 		let txt = keyinDom.value;
 		if (txt.length === 0 || txt.trim() == "") {
@@ -81,10 +88,8 @@
 	function open() {
 		ws.onopen = (event) => {
 		console.log('open connection');
-		hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
-		min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
-		sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
-		showDom.value = hr + ":" + min + ":" + sec + "|" + `${user}進入聊天室`;
+		timeSet();
+		showDom.value = time + `${user}進入聊天室`;
 		console.log('open_event', event);
 		console.log('ws', ws);
 		console.log('user', user);
@@ -94,10 +99,8 @@
 	// close();
 	function close() {
 		ws.onclose = () => {
-			hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
-			min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
-			sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
-			showDom.value = hr + ":" + min + ":" + sec + "|" + `${user}已離開聊天室`;
+			timeSet();
+			showDom.value = time + `${user}已離開聊天室`;
 			console.log('close connection');
 			// ws.send('z1z2z3z'+user);
 		}
@@ -107,9 +110,7 @@
 	// message();
 	function message() {
 		ws.onmessage = event => {
-			hr = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours();
-			min = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
-			sec = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+			timeSet();
 			console.log('message_event', event);
 			let txt = event.data;
 			// if (!showDom.value) {

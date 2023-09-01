@@ -29,21 +29,15 @@ class MyWebsocketHandler extends WebSocketHandler
         
         // var_dump(json_decode($message->getPayload()));
         $payload=json_decode($message->getPayload());
-        var_dump($payload->event);
-        // var_dump($connection->app);
-        // dd($connection);
-        // $this->channelManager;
-        // var_dump($this->channelManager);
-        
-        // \Cache::put('socekt-status', [
-        //     'socket_id' => $connection->socketId,
-        //     'status' => '在线',
-        // ], 60);
-        
-        // $message = PusherMessageFactory::createForMessage($message, $connection, $this->channelManager);
-
-        // $message->respond();
-        
+        // var_dump($payload->event);
+        // dd($payload->event);
+        // if ($payload->event=='Send_Message') {
+        //     echo $payload->event;
+        // }
+        // var_dump($payload->data);
+        // $allChat=[];
+        // array_push($allChat, $payload);
+        // var_dump($allChat);
         $broadcast_channels = $this->channelManager->find($connection->app->id, 'private-order.20');
         // $broadcast_channels = $this->channelManager->find('room', 'private-order.20');
 
@@ -51,7 +45,8 @@ class MyWebsocketHandler extends WebSocketHandler
         
         $send_data=$payload;
 
-        if ($payload->event !='pusher:subscribe' && $payload->event !='pusher:ping' && $broadcast_channels) {
+        // if ($payload->event !='pusher:subscribe' && $payload->event !='pusher:ping' && $broadcast_channels) {
+        if ($payload->event !='pusher_internal:subscription_succeeded' && $payload->event !='pusher:ping' && $payload->event !='pusher:pong' && $broadcast_channels) {
 
             foreach ($broadcast_channels->getSubscribedConnections() as $broadcast_channel) {
                 $broadcast_channel->send(json_encode($send_data));
@@ -72,10 +67,5 @@ class MyWebsocketHandler extends WebSocketHandler
     //     $this->channelManager->removeFromAllChannels($connection);
 
     //     var_dump('close');
-
-    //     \Cache::put('socekt-status', [
-    //         'socket_id' => $connection->socketId,
-    //         'status' => '离线',
-    //     ]);
     // }
 }
