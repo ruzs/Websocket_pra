@@ -93,7 +93,7 @@
                     .listen('.pusher:Send_Message', (e) => {
                         console.log(e);
                     });
-                console.log('Echo Channel List:',Echo.connector.channels);
+                // console.log('Echo Channel List:',Echo.connector.channels);
                 var Allchannel=[];
                 $.each(Echo.connector.channels,function (index,data) {
                     Allchannel.push(data.name);
@@ -102,21 +102,43 @@
             })
             
             // 接收到廣播的後續處理
+            // Echo.connector.pusher.connection.bind('error',function (e) {
+            //     console.log(e);
+            //     if (e.type=="MessageParseError") {
+            //         data=e.data.replace('eddie','');
+            //         chat=`${chat} ${time} ${data}離開頻道\n`;
+            //         showDom.val(chat);
+            //     }
+            // })
+
             Echo.connector.pusher.connection.bind('message',function (e) {
                 timeSet();
-                console.log(e);
+                if ( e.event != 'pusher:pong' && e.event != 'pusher:pong' ) {
+                    console.log(e);
+                }
+                if (e.event=='pusher_internal:subscription_succeeded') {
+                    Echo.connector.pusher.send_event('Send_Message', {
+                    Name : name,
+                    Message : 'subscription_succeeded',
+                    socketId : Echo.socketId(),
+                    });
+                }
                 if (e.event=='Send_Message') {
                     let commenter = e.data.Name;
                     let message = e.data.Message;
-                    chat=`${chat} ${time} ${commenter} : ${message}\n`;
+                    if (message == 'subscription_succeeded') {
+                        chat=`${chat} ${time} ${commenter}進入頻道\n`;
+                    }else{
+                        chat=`${chat} ${time} ${commenter} : ${message}\n`;
+                    }
                     showDom.val(chat);
                 }
-                if (e.event=='pusher:subscribe') {
-                    chat=`${chat} ${time} 使用者進入頻道\n`;
+                if (e.event=='close') {
+                    chat=`${chat} ${time} ${e.data.name}離開頻道\n`;
                     showDom.val(chat);
                 }
             })
-            
+
             // 離開公共頻道
             // Echo.leaveChannel('orders');
             // 離開私人頻道
