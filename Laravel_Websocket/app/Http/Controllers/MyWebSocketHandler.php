@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-namespace App\Http\Controllers;
 
 use BeyondCode\LaravelWebSockets\WebSockets\Messages\PusherMessageFactory;
 use BeyondCode\LaravelWebSockets\WebSockets\WebSocketHandler;
